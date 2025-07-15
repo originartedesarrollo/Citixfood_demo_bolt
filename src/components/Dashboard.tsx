@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { LogOut, MapPin, Grid, BarChart3, User, DollarSign } from 'lucide-react';
+import LanguageSelector from './LanguageSelector';
 import FarmProfile from './FarmProfile';
 import LotsManagement from './LotsManagement';
 import Traceability from './Traceability';
@@ -12,13 +14,14 @@ interface DashboardProps {
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'profile' | 'lots' | 'traceability' | 'financial'>('profile');
 
   const tabs = [
-    { id: 'profile', label: 'Perfil de Granja', icon: MapPin },
-    { id: 'lots', label: 'Gestión de Lotes', icon: Grid },
-    { id: 'traceability', label: 'Trazabilidad', icon: BarChart3 },
-    { id: 'financial', label: 'Dashboard Financiero', icon: DollarSign }
+    { id: 'profile', label: t('navigation.farm_profile'), icon: MapPin },
+    { id: 'lots', label: t('navigation.lots_management'), icon: Grid },
+    { id: 'traceability', label: t('navigation.traceability'), icon: BarChart3 },
+    { id: 'financial', label: t('navigation.financial_dashboard'), icon: DollarSign }
   ];
 
   const renderContent = () => {
@@ -49,17 +52,18 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
                 </div>
               </div>
               <div className="ml-4">
-                <h1 className="text-lg font-semibold text-gray-900">Plataforma de Productores</h1>
+                <h1 className="text-lg font-semibold text-gray-900">{t('auth.platform_title')}</h1>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-700">Bienvenido, {user.name}</span>
+            <div className="flex items-center space-x-6">
+              <LanguageSelector />
+              <span className="text-sm text-gray-700">{t('auth.welcome', { name: user.name })}</span>
               <button
                 onClick={onLogout}
                 className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
               >
                 <LogOut className="w-4 h-4" />
-                <span>Cerrar Sesión</span>
+                <span>{t('auth.logout')}</span>
               </button>
             </div>
           </div>
