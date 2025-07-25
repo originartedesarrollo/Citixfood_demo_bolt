@@ -1,5 +1,5 @@
-import React
-import { useTranslation } from 'react-i18next';, { useState } from 'react';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DollarSign, TrendingUp, TrendingDown, Users, ShoppingCart, Plus, Eye, Edit, Trash2 } from 'lucide-react';
 import { useData } from '../hooks/useData';
 import PurchaseModal from './PurchaseModal';
@@ -48,10 +48,10 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({ userId }) => {
         <div className="text-center">
           <DollarSign className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">
-            {t('financial_dashboard.no_lots')}
+            {t('financial.no_lots')}
           </h3>
           <p className="text-gray-600">
-            {t('financial_dashboard.create_lots_first')}
+            {t('financial.no_lots_description')}
           </p>
         </div>
       </div>
@@ -72,8 +72,8 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({ userId }) => {
     <div className="space-y-6">
       {/* Header */}
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Dashboard Financiero</h2>
-        <p className="text-gray-600">{t('financial_dashboard.analysis_description')}</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('financial.dashboard_title')}</h2>
+        <p className="text-gray-600">{t('financial.dashboard_subtitle')}</p>
       </div>
 
       {/* Métricas Generales */}
@@ -81,7 +81,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({ userId }) => {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Ingresos Totales</p>
+              <p className="text-sm font-medium text-gray-600">{t('financial.total_revenue')}</p>
               <p className="text-2xl font-bold text-green-600">${totalRevenue.toLocaleString()}</p>
             </div>
             <TrendingUp className="w-8 h-8 text-green-600" />
@@ -91,7 +91,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({ userId }) => {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Costos Totales</p>
+              <p className="text-sm font-medium text-gray-600">{t('financial.total_costs')}</p>
               <p className="text-2xl font-bold text-red-600">${totalCosts.toLocaleString()}</p>
             </div>
             <TrendingDown className="w-8 h-8 text-red-600" />
@@ -101,7 +101,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({ userId }) => {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Ganancia Neta</p>
+              <p className="text-sm font-medium text-gray-600">{t('financial.net_profit')}</p>
               <p className={`text-2xl font-bold ${totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                 ${totalProfit.toLocaleString()}
               </p>
@@ -113,7 +113,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({ userId }) => {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">ROI General</p>
+              <p className="text-sm font-medium text-gray-600">{t('financial.general_roi')}</p>
               <p className={`text-2xl font-bold ${overallROI >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                 {overallROI.toFixed(1)}%
               </p>
@@ -142,7 +142,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({ userId }) => {
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">
-                    Lote {lot.number}
+                    {t('lots.lot_number')} {lot.number}
                   </h3>
                   <p className="text-sm text-gray-600">{lot.hectares} ha • {lot.estimatedProduction} kg</p>
                 </div>
@@ -151,28 +151,28 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({ userId }) => {
                   className="flex items-center space-x-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <Eye className="w-4 h-4" />
-                  <span>{t('financial_dashboard.view_detail')}</span>
+                  <span>{t('common.view_detail')}</span>
                 </button>
               </div>
 
               {/* Métricas del Lote */}
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div className="bg-green-50 rounded-lg p-3">
-                  <p className="text-xs font-medium text-green-600">INGRESOS</p>
+                  <p className="text-xs font-medium text-green-600">{t('financial.revenue')}</p>
                   <p className="text-lg font-bold text-green-700">${summary.totalRevenue.toLocaleString()}</p>
                 </div>
                 <div className="bg-red-50 rounded-lg p-3">
-                  <p className="text-xs font-medium text-red-600">COSTOS</p>
+                  <p className="text-xs font-medium text-red-600">{t('financial.costs')}</p>
                   <p className="text-lg font-bold text-red-700">${summary.totalCosts.toLocaleString()}</p>
                 </div>
                 <div className="bg-blue-50 rounded-lg p-3">
-                  <p className="text-xs font-medium text-blue-600">ROI</p>
+                  <p className="text-xs font-medium text-blue-600">{t('financial.roi')}</p>
                   <p className={`text-lg font-bold ${summary.roi >= 0 ? 'text-green-700' : 'text-red-700'}`}>
                     {summary.roi.toFixed(1)}%
                   </p>
                 </div>
                 <div className="bg-purple-50 rounded-lg p-3">
-                  <p className="text-xs font-medium text-purple-600">MARGEN</p>
+                  <p className="text-xs font-medium text-purple-600">{t('financial.margin')}</p>
                   <p className={`text-lg font-bold ${summary.profitMargin >= 0 ? 'text-green-700' : 'text-red-700'}`}>
                     {summary.profitMargin.toFixed(1)}%
                   </p>
@@ -182,15 +182,15 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({ userId }) => {
               {/* Resumen de Actividad */}
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Compras registradas:</span>
+                  <span className="text-gray-600">{t('financial.registered_purchases')}:</span>
                   <span className="font-medium">{lotPurchases.length}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Actores involucrados:</span>
+                  <span className="text-gray-600">{t('financial.involved_actors')}:</span>
                   <span className="font-medium">{lotActors.length}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Precio promedio/kg:</span>
+                  <span className="text-gray-600">{t('financial.average_price_kg')}:</span>
                   <span className="font-medium">
                     ${lotPurchases.length > 0 ? 
                       (lotPurchases.reduce((sum, p) => sum + p.pricePerKg, 0) / lotPurchases.length).toFixed(2) : 
@@ -207,14 +207,14 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({ userId }) => {
                   className="flex-1 flex items-center justify-center space-x-2 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                 >
                   <ShoppingCart className="w-4 h-4" />
-                  <span>Agregar Compra</span>
+                  <span>{t('financial.add_purchase')}</span>
                 </button>
                 <button
                   onClick={() => handleAddActor(lot.id)}
                   className="flex-1 flex items-center justify-center space-x-2 px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
                 >
                   <Users className="w-4 h-4" />
-                  <span>Agregar Actor</span>
+                  <span>{t('financial.add_actor')}</span>
                 </button>
               </div>
             </div>
