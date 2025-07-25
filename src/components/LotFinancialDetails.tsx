@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Plus, Edit, Trash2, DollarSign, TrendingUp, Users, ShoppingCart } from 'lucide-react';
 import { useData } from '../hooks/useData';
 import PurchaseModal from './PurchaseModal';
@@ -11,6 +12,7 @@ interface LotFinancialDetailsProps {
 }
 
 const LotFinancialDetails: React.FC<LotFinancialDetailsProps> = ({ lotId, userId, onBack }) => {
+  const { t } = useTranslation();
   const { lots, purchases, actors, deletePurchase, deleteActor, getFinancialSummary } = useData(userId);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [showActorModal, setShowActorModal] = useState(false);
@@ -33,13 +35,13 @@ const LotFinancialDetails: React.FC<LotFinancialDetailsProps> = ({ lotId, userId
   };
 
   const handleDeletePurchase = (purchase: any) => {
-    if (window.confirm(`¿Está seguro de eliminar la compra de ${purchase.buyerName}?`)) {
+    if (window.confirm(t('purchases.delete_confirmation', { buyer: purchase.buyerName }))) {
       deletePurchase(purchase.id);
     }
   };
 
   const handleDeleteActor = (actor: any) => {
-    if (window.confirm(`¿Está seguro de eliminar el actor ${actor.name}?`)) {
+    if (window.confirm(t('actors.delete_confirmation', { name: actor.name }))) {
       deleteActor(actor.id);
     }
   };
@@ -59,21 +61,6 @@ const LotFinancialDetails: React.FC<LotFinancialDetailsProps> = ({ lotId, userId
     }
   };
 
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return 'Pendiente';
-      case 'confirmed':
-        return 'Confirmada';
-      case 'delivered':
-        return 'Entregada';
-      case 'paid':
-        return 'Pagada';
-      default:
-        return 'Desconocido';
-    }
-  };
-
   const getActorTypeColor = (type: string) => {
     switch (type) {
       case 'vaccine_supplier':
@@ -89,23 +76,8 @@ const LotFinancialDetails: React.FC<LotFinancialDetailsProps> = ({ lotId, userId
     }
   };
 
-  const getActorTypeLabel = (type: string) => {
-    switch (type) {
-      case 'vaccine_supplier':
-        return 'Proveedor Vacunas';
-      case 'feed_supplier':
-        return 'Proveedor Alimento';
-      case 'transporter':
-        return 'Transportador';
-      case 'veterinarian':
-        return 'Veterinario';
-      default:
-        return 'Otro';
-    }
-  };
-
   if (!lot) {
-    return <div>Lote no encontrado</div>;
+    return <div>{t('common.not_found')}</div>;
   }
 
   return (
@@ -119,13 +91,13 @@ const LotFinancialDetails: React.FC<LotFinancialDetailsProps> = ({ lotId, userId
               className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Volver</span>
+              <span>{t('common.back')}</span>
             </button>
             <div>
               <h2 className="text-2xl font-bold text-gray-900">
-                Dashboard Financiero - Lote {lot.number}
+                {t('financial.dashboard_title')} - {t('lots.lot_number')} {lot.number}
               </h2>
-              <p className="text-gray-600">{lot.hectares} ha • {lot.estimatedProduction} kg estimados</p>
+              <p className="text-gray-600">{lot.hectares} ha • {lot.estimatedProduction} kg {t('lots.estimated_production').toLowerCase()}</p>
             </div>
           </div>
         </div>
@@ -136,7 +108,7 @@ const LotFinancialDetails: React.FC<LotFinancialDetailsProps> = ({ lotId, userId
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Ingresos Totales</p>
+              <p className="text-sm font-medium text-gray-600">{t('financial.total_revenue')}</p>
               <p className="text-2xl font-bold text-green-600">${summary.totalRevenue.toLocaleString()}</p>
             </div>
             <DollarSign className="w-8 h-8 text-green-600" />
@@ -146,7 +118,7 @@ const LotFinancialDetails: React.FC<LotFinancialDetailsProps> = ({ lotId, userId
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Costos Totales</p>
+              <p className="text-sm font-medium text-gray-600">{t('financial.total_costs')}</p>
               <p className="text-2xl font-bold text-red-600">${summary.totalCosts.toLocaleString()}</p>
             </div>
             <TrendingUp className="w-8 h-8 text-red-600" />
@@ -156,7 +128,7 @@ const LotFinancialDetails: React.FC<LotFinancialDetailsProps> = ({ lotId, userId
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">ROI</p>
+              <p className="text-sm font-medium text-gray-600">{t('financial.roi')}</p>
               <p className={`text-2xl font-bold ${summary.roi >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                 {summary.roi.toFixed(1)}%
               </p>
@@ -172,7 +144,7 @@ const LotFinancialDetails: React.FC<LotFinancialDetailsProps> = ({ lotId, userId
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Margen de Ganancia</p>
+              <p className="text-sm font-medium text-gray-600">{t('financial.profit_margin')}</p>
               <p className={`text-2xl font-bold ${summary.profitMargin >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                 {summary.profitMargin.toFixed(1)}%
               </p>
@@ -190,22 +162,22 @@ const LotFinancialDetails: React.FC<LotFinancialDetailsProps> = ({ lotId, userId
 
       {/* Desglose de Costos */}
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Desglose de Costos</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('financial.cost_breakdown')}</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-red-50 rounded-lg p-4">
-            <p className="text-sm font-medium text-red-600">Vacunas</p>
+            <p className="text-sm font-medium text-red-600">{t('financial.vaccines')}</p>
             <p className="text-xl font-bold text-red-700">${summary.costBreakdown.vaccines.toLocaleString()}</p>
           </div>
           <div className="bg-orange-50 rounded-lg p-4">
-            <p className="text-sm font-medium text-orange-600">Alimento</p>
+            <p className="text-sm font-medium text-orange-600">{t('financial.feed')}</p>
             <p className="text-xl font-bold text-orange-700">${summary.costBreakdown.feed.toLocaleString()}</p>
           </div>
           <div className="bg-blue-50 rounded-lg p-4">
-            <p className="text-sm font-medium text-blue-600">Transporte</p>
+            <p className="text-sm font-medium text-blue-600">{t('financial.transport')}</p>
             <p className="text-xl font-bold text-blue-700">${summary.costBreakdown.transport.toLocaleString()}</p>
           </div>
           <div className="bg-green-50 rounded-lg p-4">
-            <p className="text-sm font-medium text-green-600">Veterinario</p>
+            <p className="text-sm font-medium text-green-600">{t('financial.veterinary')}</p>
             <p className="text-xl font-bold text-green-700">${summary.costBreakdown.veterinary.toLocaleString()}</p>
           </div>
         </div>
@@ -214,20 +186,20 @@ const LotFinancialDetails: React.FC<LotFinancialDetailsProps> = ({ lotId, userId
       {/* Compras */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">Compras Registradas</h3>
+          <h3 className="text-lg font-semibold text-gray-900">{t('financial.purchases_registered')}</h3>
           <button
             onClick={() => setShowPurchaseModal(true)}
             className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
             <Plus className="w-4 h-4" />
-            <span>Agregar Compra</span>
+            <span>{t('financial.add_purchase')}</span>
           </button>
         </div>
 
         {lotPurchases.length === 0 ? (
           <div className="text-center py-8">
             <ShoppingCart className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600 mb-4">No hay compras registradas para este lote.</p>
+            <p className="text-gray-600 mb-4">{t('financial.no_purchases')}</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -235,22 +207,22 @@ const LotFinancialDetails: React.FC<LotFinancialDetailsProps> = ({ lotId, userId
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Comprador
+                    {t('financial.buyer')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Cantidad
+                    {t('common.quantity')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Precio/kg
+                    {t('financial.price_per_kg')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Total
+                    {t('common.total')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Estado
+                    {t('common.status')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Acciones
+                    {t('common.actions')}
                   </th>
                 </tr>
               </thead>
@@ -274,7 +246,7 @@ const LotFinancialDetails: React.FC<LotFinancialDetailsProps> = ({ lotId, userId
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(purchase.status)}`}>
-                        {getStatusLabel(purchase.status)}
+                        {t(`purchases.status.${purchase.status}`)}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -304,20 +276,20 @@ const LotFinancialDetails: React.FC<LotFinancialDetailsProps> = ({ lotId, userId
       {/* Actores */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">Actores Involucrados</h3>
+          <h3 className="text-lg font-semibold text-gray-900">{t('financial.involved_actors_title')}</h3>
           <button
             onClick={() => setShowActorModal(true)}
             className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
           >
             <Plus className="w-4 h-4" />
-            <span>Agregar Actor</span>
+            <span>{t('financial.add_actor')}</span>
           </button>
         </div>
 
         {lotActors.length === 0 ? (
           <div className="text-center py-8">
             <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600 mb-4">No hay actores registrados para este lote.</p>
+            <p className="text-gray-600 mb-4">{t('financial.no_actors')}</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -325,22 +297,22 @@ const LotFinancialDetails: React.FC<LotFinancialDetailsProps> = ({ lotId, userId
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Tipo
+                    {t('financial.type')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Nombre
+                    {t('common.name')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Empresa
+                    {t('common.company')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Fecha
+                    {t('common.date')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Costo
+                    {t('common.cost')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Acciones
+                    {t('common.actions')}
                   </th>
                 </tr>
               </thead>
@@ -349,7 +321,7 @@ const LotFinancialDetails: React.FC<LotFinancialDetailsProps> = ({ lotId, userId
                   <tr key={actor.id}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getActorTypeColor(actor.type)}`}>
-                        {getActorTypeLabel(actor.type)}
+                        {t(`actors.type_labels.${actor.type}`)}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
