@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Plus, Edit, Trash2, Calendar, MapPin } from 'lucide-react';
 import { useData } from '../hooks/useData';
 import { Lot } from '../types';
@@ -8,6 +9,7 @@ interface LotsManagementProps {
 }
 
 const LotsManagement: React.FC<LotsManagementProps> = ({ userId }) => {
+  const { t } = useTranslation();
   const { farm, lots, saveLot, deleteLot } = useData(userId);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLot, setEditingLot] = useState<Lot | null>(null);
@@ -56,7 +58,7 @@ const LotsManagement: React.FC<LotsManagementProps> = ({ userId }) => {
   };
 
   const handleDelete = (lot: Lot) => {
-    if (window.confirm(`¿Está seguro de eliminar el lote ${lot.number}?`)) {
+    if (window.confirm(t('lots.delete_confirmation', { number: lot.number }))) {
       deleteLot(lot.id);
     }
   };
@@ -76,31 +78,16 @@ const LotsManagement: React.FC<LotsManagementProps> = ({ userId }) => {
     }
   };
 
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case 'initiated':
-        return 'Iniciado';
-      case 'in_progress':
-        return 'En Progreso';
-      case 'completed':
-        return 'Completado';
-      case 'finished':
-        return 'Terminado';
-      default:
-        return 'Desconocido';
-    }
-  };
-
   if (!farm) {
     return (
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="text-center">
           <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">
-            Completa el perfil de tu granja
+            {t('farm.complete_farm_first')}
           </h3>
           <p className="text-gray-600">
-            Antes de gestionar lotes, debes completar la información de tu granja.
+            {t('farm.complete_farm_description')}
           </p>
         </div>
       </div>
@@ -113,15 +100,15 @@ const LotsManagement: React.FC<LotsManagementProps> = ({ userId }) => {
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex justify-between items-center">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Gestión de Lotes</h2>
-            <p className="text-gray-600 mt-1">Granja: {farm.name}</p>
+            <h2 className="text-2xl font-bold text-gray-900">{t('lots.management_title')}</h2>
+            <p className="text-gray-600 mt-1">{t('lots.farm_label', { name: farm.name })}</p>
           </div>
           <button
             onClick={() => handleOpenModal()}
             className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
             <Plus className="w-4 h-4" />
-            <span>Agregar Lote</span>
+            <span>{t('lots.add_lot')}</span>
           </button>
         </div>
       </div>
@@ -133,10 +120,10 @@ const LotsManagement: React.FC<LotsManagementProps> = ({ userId }) => {
             <div className="flex justify-between items-start mb-4">
               <div>
                 <h3 className="text-lg font-semibold text-gray-900">
-                  Lote {lot.number}
+                  {t('lots.lot_number')} {lot.number}
                 </h3>
                 <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(lot.status)}`}>
-                  {getStatusLabel(lot.status)}
+                  {t(`lots.status.${lot.status}`)}
                 </span>
               </div>
               <div className="flex space-x-2">
@@ -157,15 +144,15 @@ const LotsManagement: React.FC<LotsManagementProps> = ({ userId }) => {
 
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Hectáreas:</span>
+                <span className="text-sm text-gray-600">{t('lots.hectares')}:</span>
                 <span className="text-sm font-medium">{lot.hectares} ha</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Producción Estimada:</span>
+                <span className="text-sm text-gray-600">{t('lots.estimated_production')}:</span>
                 <span className="text-sm font-medium">{lot.estimatedProduction} kg</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Fecha de Inicio:</span>
+                <span className="text-sm text-gray-600">{t('lots.start_date')}:</span>
                 <div className="flex items-center space-x-1">
                   <Calendar className="w-3 h-3 text-gray-400" />
                   <span className="text-sm font-medium">
@@ -183,17 +170,17 @@ const LotsManagement: React.FC<LotsManagementProps> = ({ userId }) => {
           <div className="text-center">
             <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No hay lotes registrados
+              {t('lots.no_lots')}
             </h3>
             <p className="text-gray-600 mb-4">
-              Comienza agregando el primer lote de tu granja.
+              {t('lots.add_first_lot')}
             </p>
             <button
               onClick={() => handleOpenModal()}
               className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors mx-auto"
             >
               <Plus className="w-4 h-4" />
-              <span>Agregar Primer Lote</span>
+              <span>{t('lots.add_first_lot_button')}</span>
             </button>
           </div>
         </div>
@@ -204,13 +191,13 @@ const LotsManagement: React.FC<LotsManagementProps> = ({ userId }) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              {editingLot ? 'Editar Lote' : 'Agregar Nuevo Lote'}
+              {editingLot ? t('lots.edit_lot') : t('lots.add_new_lot')}
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label htmlFor="number" className="block text-sm font-medium text-gray-700 mb-1">
-                  Número de Lote *
+                  {t('lots.lot_number')} *
                 </label>
                 <input
                   id="number"
@@ -224,7 +211,7 @@ const LotsManagement: React.FC<LotsManagementProps> = ({ userId }) => {
 
               <div>
                 <label htmlFor="hectares" className="block text-sm font-medium text-gray-700 mb-1">
-                  Hectáreas *
+                  {t('lots.hectares')} *
                 </label>
                 <input
                   id="hectares"
@@ -240,7 +227,7 @@ const LotsManagement: React.FC<LotsManagementProps> = ({ userId }) => {
 
               <div>
                 <label htmlFor="estimatedProduction" className="block text-sm font-medium text-gray-700 mb-1">
-                  Producción Estimada (kg) *
+                  {t('lots.estimated_production')} *
                 </label>
                 <input
                   id="estimatedProduction"
@@ -255,7 +242,7 @@ const LotsManagement: React.FC<LotsManagementProps> = ({ userId }) => {
 
               <div>
                 <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-1">
-                  Fecha de Inicio *
+                  {t('lots.start_date')} *
                 </label>
                 <input
                   id="startDate"
@@ -269,7 +256,7 @@ const LotsManagement: React.FC<LotsManagementProps> = ({ userId }) => {
 
               <div>
                 <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
-                  Estado *
+                  {t('common.status')} *
                 </label>
                 <select
                   id="status"
@@ -278,10 +265,10 @@ const LotsManagement: React.FC<LotsManagementProps> = ({ userId }) => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   required
                 >
-                  <option value="initiated">Iniciado</option>
-                  <option value="in_progress">En Progreso</option>
-                  <option value="completed">Completado</option>
-                  <option value="finished">Terminado</option>
+                  <option value="initiated">{t('lots.status.initiated')}</option>
+                  <option value="in_progress">{t('lots.status.in_progress')}</option>
+                  <option value="completed">{t('lots.status.completed')}</option>
+                  <option value="finished">{t('lots.status.finished')}</option>
                 </select>
               </div>
 
@@ -291,13 +278,13 @@ const LotsManagement: React.FC<LotsManagementProps> = ({ userId }) => {
                   onClick={() => setIsModalOpen(false)}
                   className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                 >
-                  Cancelar
+                  {t('common.cancel')}
                 </button>
                 <button
                   type="submit"
                   className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                 >
-                  {editingLot ? 'Actualizar' : 'Crear'} Lote
+                  {editingLot ? t('common.edit') : t('common.add')} {t('lots.lot_number')}
                 </button>
               </div>
             </form>
