@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Plus, Edit, Trash2, Calendar, TrendingUp } from 'lucide-react';
 import { useData } from '../hooks/useData';
 import { TraceabilityRecord } from '../types';
@@ -10,6 +11,7 @@ interface TraceabilityDetailsProps {
 }
 
 const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId, onBack }) => {
+  const { t } = useTranslation();
   const { lots, traceabilityRecords, saveTraceabilityRecord, deleteTraceabilityRecord, getTraceabilitySummary } = useData(userId);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingRecord, setEditingRecord] = useState<TraceabilityRecord | null>(null);
@@ -67,7 +69,7 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
   };
 
   const handleDelete = (record: TraceabilityRecord) => {
-    if (window.confirm('¿Está seguro de eliminar este registro?')) {
+    if (window.confirm(t('traceability.delete_confirmation'))) {
       deleteTraceabilityRecord(record.id);
     }
   };
@@ -87,21 +89,6 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
     }
   };
 
-  const getTypeLabel = (type: string) => {
-    switch (type) {
-      case 'vaccine':
-        return 'Vacuna';
-      case 'food':
-        return 'Alimento';
-      case 'water':
-        return 'Agua';
-      case 'growth':
-        return 'Crecimiento';
-      default:
-        return 'Otro';
-    }
-  };
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'initiated':
@@ -112,19 +99,6 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
         return 'bg-gray-100 text-gray-800';
       default:
         return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case 'initiated':
-        return 'Iniciado';
-      case 'completed':
-        return 'Completado';
-      case 'finished':
-        return 'Terminado';
-      default:
-        return 'Desconocido';
     }
   };
 
@@ -152,7 +126,7 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
   };
 
   if (!lot) {
-    return <div>Lote no encontrado</div>;
+    return <div>{t('common.not_found')}</div>;
   }
 
   return (
@@ -166,13 +140,13 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
               className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Volver</span>
+              <span>{t('common.back')}</span>
             </button>
             <div>
               <h2 className="text-2xl font-bold text-gray-900">
-                Trazabilidad - Lote {lot.number}
+                {t('traceability.title')} - {t('lots.lot_number')} {lot.number}
               </h2>
-              <p className="text-gray-600">{lot.hectares} ha • {lot.estimatedProduction} kg estimados</p>
+              <p className="text-gray-600">{lot.hectares} ha • {lot.estimatedProduction} kg {t('lots.estimated_production').toLowerCase()}</p>
             </div>
           </div>
           <button
@@ -180,7 +154,7 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
             className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
             <Plus className="w-4 h-4" />
-            <span>Agregar Registro</span>
+            <span>{t('traceability.add_record')}</span>
           </button>
         </div>
       </div>
@@ -190,7 +164,7 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Crecimiento Promedio</p>
+              <p className="text-sm font-medium text-gray-600">{t('traceability.average_growth')}</p>
               <p className="text-2xl font-bold text-green-600">{summary.averageGrowth.toFixed(1)} cm</p>
             </div>
             <TrendingUp className="w-8 h-8 text-green-600" />
@@ -199,7 +173,7 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Vacunas Aplicadas</p>
+              <p className="text-sm font-medium text-gray-600">{t('traceability.vaccines_applied')}</p>
               <p className="text-2xl font-bold text-red-600">{summary.totalVaccines}</p>
             </div>
             <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
@@ -210,7 +184,7 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Alimentos Registrados</p>
+              <p className="text-sm font-medium text-gray-600">{t('traceability.food_registered')}</p>
               <p className="text-2xl font-bold text-orange-600">{summary.totalFood}</p>
             </div>
             <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
@@ -221,7 +195,7 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Registros</p>
+              <p className="text-sm font-medium text-gray-600">{t('traceability.total_records')}</p>
               <p className="text-2xl font-bold text-blue-600">{lotRecords.length}</p>
             </div>
             <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
@@ -234,25 +208,25 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
       {/* Growth Chart */}
       {summary.growthHistory.length > 0 && (
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Evolución del Crecimiento</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('traceability.growth_evolution')}</h3>
           <div className="h-80 bg-gray-50 rounded-lg flex items-center justify-center">
             <div className="text-center">
               <TrendingUp className="w-16 h-16 text-green-600 mx-auto mb-4" />
               <p className="text-lg font-semibold text-gray-900 mb-2">
-                Crecimiento Promedio: {summary.averageGrowth.toFixed(1)} cm
+                {t('traceability.average_growth')}: {summary.averageGrowth.toFixed(1)} cm
               </p>
               <p className="text-sm text-gray-600">
-                {summary.growthHistory.length} mediciones registradas
+                {summary.growthHistory.length} {t('traceability.measurements_recorded')}
               </p>
               <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p className="font-medium text-gray-700">Último registro:</p>
+                  <p className="font-medium text-gray-700">{t('traceability.last_record')}:</p>
                   <p className="text-green-600">
                     {summary.growthHistory[summary.growthHistory.length - 1]?.value} cm
                   </p>
                 </div>
                 <div>
-                  <p className="font-medium text-gray-700">Fecha:</p>
+                  <p className="font-medium text-gray-700">{t('common.date')}:</p>
                   <p className="text-gray-600">
                     {formatDate(summary.growthHistory[summary.growthHistory.length - 1]?.date)}
                   </p>
@@ -265,17 +239,17 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
 
       {/* Records Table */}
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Registros de Trazabilidad</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('traceability.title')} - {t('traceability.records')}</h3>
         
         {lotRecords.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-gray-600 mb-4">No hay registros de trazabilidad para este lote.</p>
+            <p className="text-gray-600 mb-4">{t('traceability.no_records')}</p>
             <button
               onClick={() => handleOpenModal()}
               className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors mx-auto"
             >
               <Plus className="w-4 h-4" />
-              <span>Agregar Primer Registro</span>
+              <span>{t('traceability.add_first_record')}</span>
             </button>
           </div>
         ) : (
@@ -284,22 +258,22 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Tipo
+                    {t('traceability.record_type')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Fecha
+                    {t('common.date')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Nombre
+                    {t('common.name')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Cantidad
+                    {t('common.quantity')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Estado
+                    {t('common.status')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Acciones
+                    {t('common.actions')}
                   </th>
                 </tr>
               </thead>
@@ -308,7 +282,7 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
                   <tr key={record.id}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(record.type)}`}>
-                        {getTypeLabel(record.type)}
+                        {t(`traceability.types.${record.type}`)}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -324,12 +298,12 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
-                        {record.quantity} {record.unit}
+                        {record.quantity} {t(`traceability.units.${record.unit}`)}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(record.status)}`}>
-                        {getStatusLabel(record.status)}
+                        {t(`lots.status.${record.status}`)}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -361,13 +335,13 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              {editingRecord ? 'Editar Registro' : 'Agregar Nuevo Registro'}
+              {editingRecord ? t('traceability.edit_record') : t('traceability.add_new_record')}
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-1">
-                  Tipo de Registro *
+                  {t('traceability.record_type')} *
                 </label>
                 <select
                   id="type"
@@ -380,16 +354,16 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   required
                 >
-                  <option value="growth">Crecimiento</option>
-                  <option value="vaccine">Vacuna</option>
-                  <option value="food">Alimento</option>
-                  <option value="water">Agua</option>
+                  <option value="growth">{t('traceability.types.growth')}</option>
+                  <option value="vaccine">{t('traceability.types.vaccine')}</option>
+                  <option value="food">{t('traceability.types.food')}</option>
+                  <option value="water">{t('traceability.types.water')}</option>
                 </select>
               </div>
 
               <div>
                 <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
-                  Fecha *
+                  {t('common.date')} *
                 </label>
                 <input
                   id="date"
@@ -403,7 +377,7 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
 
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                  Nombre *
+                  {t('common.name')} *
                 </label>
                 <input
                   id="name"
@@ -411,7 +385,7 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                  placeholder="Ej: Vacuna Triple, Alimento Concentrado, etc."
+                  placeholder={t('traceability.name_placeholder')}
                   required
                 />
               </div>
@@ -419,7 +393,7 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-1">
-                    Cantidad *
+                    {t('common.quantity')} *
                   </label>
                   <input
                     id="quantity"
@@ -434,7 +408,7 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
                 </div>
                 <div>
                   <label htmlFor="unit" className="block text-sm font-medium text-gray-700 mb-1">
-                    Unidad *
+                    Unit *
                   </label>
                   <select
                     id="unit"
@@ -443,19 +417,19 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     required
                   >
-                    <option value="mg">mg</option>
-                    <option value="gr">gr</option>
-                    <option value="kg">kg</option>
-                    <option value="ml">ml</option>
-                    <option value="l">l</option>
-                    <option value="cm">cm</option>
+                    <option value="mg">{t('traceability.units.mg')}</option>
+                    <option value="gr">{t('traceability.units.gr')}</option>
+                    <option value="kg">{t('traceability.units.kg')}</option>
+                    <option value="ml">{t('traceability.units.ml')}</option>
+                    <option value="l">{t('traceability.units.l')}</option>
+                    <option value="cm">{t('traceability.units.cm')}</option>
                   </select>
                 </div>
               </div>
 
               <div>
                 <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
-                  Estado *
+                  {t('common.status')} *
                 </label>
                 <select
                   id="status"
@@ -464,15 +438,15 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   required
                 >
-                  <option value="initiated">Iniciado</option>
-                  <option value="completed">Completado</option>
-                  <option value="finished">Terminado</option>
+                  <option value="initiated">{t('lots.status.initiated')}</option>
+                  <option value="completed">{t('lots.status.completed')}</option>
+                  <option value="finished">{t('lots.status.finished')}</option>
                 </select>
               </div>
 
               <div>
                 <label htmlFor="observations" className="block text-sm font-medium text-gray-700 mb-1">
-                  Observaciones
+                  {t('traceability.observations')}
                 </label>
                 <textarea
                   id="observations"
@@ -480,7 +454,7 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
                   onChange={(e) => setFormData({ ...formData, observations: e.target.value })}
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                  placeholder="Observaciones adicionales..."
+                  placeholder={t('traceability.observations_placeholder')}
                 />
               </div>
 
@@ -490,13 +464,13 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
                   onClick={() => setIsModalOpen(false)}
                   className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                 >
-                  Cancelar
+                  {t('common.cancel')}
                 </button>
                 <button
                   type="submit"
                   className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                 >
-                  {editingRecord ? 'Actualizar' : 'Crear'} Registro
+                  {editingRecord ? t('common.edit') : t('common.add')} {t('traceability.record_type')}
                 </button>
               </div>
             </form>
