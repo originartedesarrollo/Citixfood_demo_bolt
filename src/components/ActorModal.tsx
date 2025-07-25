@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Save, X } from 'lucide-react';
 import { useData } from '../hooks/useData';
 import { Actor } from '../types';
@@ -11,6 +12,7 @@ interface ActorModalProps {
 }
 
 const ActorModal: React.FC<ActorModalProps> = ({ lotId, userId, actor, onClose }) => {
+  const { t } = useTranslation();
   const { saveActor } = useData(userId);
   const [formData, setFormData] = useState<Partial<Actor>>({
     name: actor?.name || '',
@@ -41,27 +43,12 @@ const ActorModal: React.FC<ActorModalProps> = ({ lotId, userId, actor, onClose }
     onClose();
   };
 
-  const getTypeLabel = (type: string) => {
-    switch (type) {
-      case 'vaccine_supplier':
-        return 'Proveedor de Vacunas';
-      case 'feed_supplier':
-        return 'Proveedor de Alimento';
-      case 'transporter':
-        return 'Transportador';
-      case 'veterinarian':
-        return 'Veterinario';
-      default:
-        return 'Otro';
-    }
-  };
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold text-gray-900">
-            {actor ? 'Editar Actor' : 'Registrar Nuevo Actor'}
+            {actor ? t('actors.edit_actor') : t('actors.add_actor')}
           </h3>
           <button
             onClick={onClose}
@@ -74,7 +61,7 @@ const ActorModal: React.FC<ActorModalProps> = ({ lotId, userId, actor, onClose }
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-1">
-              Tipo de Actor *
+              {t('actors.actor_type')} *
             </label>
             <select
               id="type"
@@ -83,17 +70,17 @@ const ActorModal: React.FC<ActorModalProps> = ({ lotId, userId, actor, onClose }
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
               required
             >
-              <option value="vaccine_supplier">Proveedor de Vacunas</option>
-              <option value="feed_supplier">Proveedor de Alimento</option>
-              <option value="transporter">Transportador</option>
-              <option value="veterinarian">Veterinario</option>
+              <option value="vaccine_supplier">{t('actors.types.vaccine_supplier')}</option>
+              <option value="feed_supplier">{t('actors.types.feed_supplier')}</option>
+              <option value="transporter">{t('actors.types.transporter')}</option>
+              <option value="veterinarian">{t('actors.types.veterinarian')}</option>
             </select>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                Nombre *
+                {t('common.name')} *
               </label>
               <input
                 id="name"
@@ -107,7 +94,7 @@ const ActorModal: React.FC<ActorModalProps> = ({ lotId, userId, actor, onClose }
             
             <div>
               <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">
-                Empresa/Compañía *
+                {t('common.company')} *
               </label>
               <input
                 id="company"
@@ -122,7 +109,7 @@ const ActorModal: React.FC<ActorModalProps> = ({ lotId, userId, actor, onClose }
 
           <div>
             <label htmlFor="contactInfo" className="block text-sm font-medium text-gray-700 mb-1">
-              Información de Contacto *
+              {t('actors.contact_info')} *
             </label>
             <input
               id="contactInfo"
@@ -130,7 +117,7 @@ const ActorModal: React.FC<ActorModalProps> = ({ lotId, userId, actor, onClose }
               value={formData.contactInfo}
               onChange={(e) => setFormData({ ...formData, contactInfo: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-              placeholder="Teléfono, email, etc."
+              placeholder={t('actors.contact_placeholder')}
               required
             />
           </div>
@@ -138,7 +125,7 @@ const ActorModal: React.FC<ActorModalProps> = ({ lotId, userId, actor, onClose }
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="interventionDate" className="block text-sm font-medium text-gray-700 mb-1">
-                Fecha de Intervención *
+                {t('financial.intervention_date')} *
               </label>
               <input
                 id="interventionDate"
@@ -152,7 +139,7 @@ const ActorModal: React.FC<ActorModalProps> = ({ lotId, userId, actor, onClose }
             
             <div>
               <label htmlFor="cost" className="block text-sm font-medium text-gray-700 mb-1">
-                Costo (USD) *
+                {t('actors.cost_usd')} *
               </label>
               <input
                 id="cost"
@@ -169,7 +156,7 @@ const ActorModal: React.FC<ActorModalProps> = ({ lotId, userId, actor, onClose }
 
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-              Descripción del Servicio *
+              {t('actors.service_description')} *
             </label>
             <textarea
               id="description"
@@ -177,7 +164,7 @@ const ActorModal: React.FC<ActorModalProps> = ({ lotId, userId, actor, onClose }
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={3}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-              placeholder="Describe el servicio o producto proporcionado..."
+              placeholder={t('actors.service_placeholder')}
               required
             />
           </div>
@@ -188,14 +175,14 @@ const ActorModal: React.FC<ActorModalProps> = ({ lotId, userId, actor, onClose }
               onClick={onClose}
               className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
             >
-              Cancelar
+              {t('common.cancel')}
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2"
             >
               <Save className="w-4 h-4" />
-              <span>{actor ? 'Actualizar' : 'Guardar'} Actor</span>
+              <span>{actor ? t('common.edit') : t('common.save')} {t('actors.actor_type')}</span>
             </button>
           </div>
         </form>
