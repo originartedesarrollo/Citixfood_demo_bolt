@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Save, X } from 'lucide-react';
 import { useData } from '../hooks/useData';
 import { Purchase } from '../types';
@@ -11,6 +12,7 @@ interface PurchaseModalProps {
 }
 
 const PurchaseModal: React.FC<PurchaseModalProps> = ({ lotId, userId, purchase, onClose }) => {
+  const { t } = useTranslation();
   const { savePurchase } = useData(userId);
   const [formData, setFormData] = useState<Partial<Purchase>>({
     buyerName: purchase?.buyerName || '',
@@ -54,7 +56,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ lotId, userId, purchase, 
       <div className="bg-white rounded-lg p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold text-gray-900">
-            {purchase ? 'Editar Compra' : 'Registrar Nueva Compra'}
+            {purchase ? t('purchases.edit_purchase') : t('purchases.add_purchase')}
           </h3>
           <button
             onClick={onClose}
@@ -68,7 +70,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ lotId, userId, purchase, 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="buyerName" className="block text-sm font-medium text-gray-700 mb-1">
-                Nombre del Comprador *
+                {t('purchases.buyer_name')} *
               </label>
               <input
                 id="buyerName"
@@ -82,7 +84,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ lotId, userId, purchase, 
             
             <div>
               <label htmlFor="buyerCompany" className="block text-sm font-medium text-gray-700 mb-1">
-                Empresa/Compañía *
+                {t('purchases.buyer_company')} *
               </label>
               <input
                 id="buyerCompany"
@@ -98,7 +100,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ lotId, userId, purchase, 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-1">
-                Cantidad (kg) *
+                {t('purchases.quantity_kg')} *
               </label>
               <input
                 id="quantity"
@@ -114,7 +116,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ lotId, userId, purchase, 
             
             <div>
               <label htmlFor="pricePerKg" className="block text-sm font-medium text-gray-700 mb-1">
-                Precio/kg (USD) *
+                {t('purchases.price_per_kg_usd')} *
               </label>
               <input
                 id="pricePerKg"
@@ -130,7 +132,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ lotId, userId, purchase, 
             
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Total (USD)
+                {t('purchases.total_usd')}
               </label>
               <div className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 font-medium">
                 ${calculateTotal().toLocaleString()}
@@ -141,7 +143,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ lotId, userId, purchase, 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="purchaseDate" className="block text-sm font-medium text-gray-700 mb-1">
-                Fecha de Compra *
+                {t('purchases.purchase_date')} *
               </label>
               <input
                 id="purchaseDate"
@@ -155,7 +157,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ lotId, userId, purchase, 
             
             <div>
               <label htmlFor="deliveryDate" className="block text-sm font-medium text-gray-700 mb-1">
-                Fecha de Entrega
+                {t('purchases.delivery_date')}
               </label>
               <input
                 id="deliveryDate"
@@ -170,7 +172,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ lotId, userId, purchase, 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
-                Estado *
+                {t('common.status')} *
               </label>
               <select
                 id="status"
@@ -179,16 +181,16 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ lotId, userId, purchase, 
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 required
               >
-                <option value="pending">Pendiente</option>
-                <option value="confirmed">Confirmada</option>
-                <option value="delivered">Entregada</option>
-                <option value="paid">Pagada</option>
+                <option value="pending">{t('purchases.status.pending')}</option>
+                <option value="confirmed">{t('purchases.status.confirmed')}</option>
+                <option value="delivered">{t('purchases.status.delivered')}</option>
+                <option value="paid">{t('purchases.status.paid')}</option>
               </select>
             </div>
             
             <div>
               <label htmlFor="paymentMethod" className="block text-sm font-medium text-gray-700 mb-1">
-                Método de Pago *
+                {t('purchases.payment_method')} *
               </label>
               <select
                 id="paymentMethod"
@@ -197,9 +199,9 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ lotId, userId, purchase, 
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 required
               >
-                <option value="transfer">Transferencia</option>
-                <option value="cash">Efectivo</option>
-                <option value="check">Cheque</option>
+                <option value="transfer">{t('purchases.payment_methods.transfer')}</option>
+                <option value="cash">{t('purchases.payment_methods.cash')}</option>
+                <option value="check">{t('purchases.payment_methods.check')}</option>
               </select>
             </div>
           </div>
@@ -210,14 +212,14 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ lotId, userId, purchase, 
               onClick={onClose}
               className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
             >
-              Cancelar
+              {t('common.cancel')}
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2"
             >
               <Save className="w-4 h-4" />
-              <span>{purchase ? 'Actualizar' : 'Guardar'} Compra</span>
+              <span>{purchase ? t('common.edit') : t('common.save')} {t('purchases.purchase_date')}</span>
             </button>
           </div>
         </form>
