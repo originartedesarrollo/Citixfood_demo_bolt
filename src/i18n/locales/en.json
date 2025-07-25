@@ -17,7 +17,8 @@
     "quantity": "Quantity",
     "price": "Price",
     "view_detail": "View Detail",
-    "close": "Close"
+    "close": "Close",
+    "not_found": "Not found"
   },
   "auth": {
     "platform_title": "Agricultural Producers Platform",
