@@ -22,7 +22,13 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
     quantity: 0,
     unit: 'cm',
     observations: '',
-    status: 'initiated'
+    status: 'initiated',
+    expirationDate: '',
+    manufacturingYear: '',
+    qualityCertificate: '',
+    sanitaryRegistry: '',
+    manufacturer: '',
+    batchNumber: ''
   });
 
   const lot = lots.find(l => l.id === lotId);
@@ -42,7 +48,13 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
         quantity: 0,
         unit: 'cm',
         observations: '',
-        status: 'initiated'
+        status: 'initiated',
+        expirationDate: '',
+        manufacturingYear: new Date().getFullYear().toString(),
+        qualityCertificate: '',
+        sanitaryRegistry: '',
+        manufacturer: '',
+        batchNumber: ''
       });
     }
     setIsModalOpen(true);
@@ -60,7 +72,13 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
       quantity: formData.quantity || 0,
       unit: formData.unit || 'cm',
       observations: formData.observations || '',
-      status: formData.status || 'initiated'
+      status: formData.status || 'initiated',
+      expirationDate: formData.expirationDate,
+      manufacturingYear: formData.manufacturingYear,
+      qualityCertificate: formData.qualityCertificate,
+      sanitaryRegistry: formData.sanitaryRegistry,
+      manufacturer: formData.manufacturer,
+      batchNumber: formData.batchNumber
     };
 
     saveTraceabilityRecord(recordData);
@@ -116,6 +134,8 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
         return 'gr';
     }
   };
+
+  const isVaccineOrFood = formData.type === 'vaccine' || formData.type === 'food';
 
   // Preparar datos para la gráfica de crecimiento
   const formatDate = (dateString: string) => {
@@ -295,11 +315,31 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">{record.name}</div>
+                      {record.batchNumber && (
+                        <div className="text-xs text-gray-500">Lote: {record.batchNumber}</div>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{record.manufacturer || '-'}</div>
+                      {record.sanitaryRegistry && (
+                        <div className="text-xs text-gray-500">Reg: {record.sanitaryRegistry}</div>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
                         {record.quantity} {t(`traceability.units.${record.unit}`)}
                       </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {record.expirationDate ? 
+                          new Date(record.expirationDate).toLocaleDateString('es-ES') : 
+                          '-'
+                        }
+                      </div>
+                      {record.manufacturingYear && (
+                        <div className="text-xs text-gray-500">Fab: {record.manufacturingYear}</div>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(record.status)}`}>
@@ -389,6 +429,115 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
                   required
                 />
               </div>
+
+              {/* Campos adicionales para vacunas y alimentos */}
+              {isVaccineOrFood && (
+                <div className="space-y-4 p-4 bg-blue-50 rounded-lg">
+                  <h4 className="text-sm font-semibold text-blue-900 mb-3">
+                    {t('traceability.product_details')}
+                  </h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="manufacturer" className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('traceability.manufacturer')} *
+                      </label>
+                      <input
+                        id="manufacturer"
+                        type="text"
+                        value={formData.manufacturer}
+                        onChange={(e) => setFormData({ ...formData, manufacturer: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        placeholder="Ej: Pfizer, Zoetis, etc."
+                        required={isVaccineOrFood}
+                      />
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="batchNumber" className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('traceability.batch_number')} *
+                      </label>
+                      <input
+                        id="batchNumber"
+                        type="text"
+                        value={formData.batchNumber}
+                        onChange={(e) => setFormData({ ...formData, batchNumber: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        placeholder="Ej: LOT123456"
+                        required={isVaccineOrFood}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="expirationDate" className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('traceability.expiration_date')} *
+                      </label>
+                      <input
+                        id="expirationDate"
+                        type="date"
+                        value={formData.expirationDate}
+                        onChange={(e) => setFormData({ ...formData, expirationDate: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        required={isVaccineOrFood}
+                      />
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="manufacturingYear" className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('traceability.manufacturing_year')} *
+                      </label>
+                      <input
+                        id="manufacturingYear"
+                        type="number"
+                        min="2020"
+                        max="2030"
+                        value={formData.manufacturingYear}
+                        onChange={(e) => setFormData({ ...formData, manufacturingYear: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        required={isVaccineOrFood}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h4 className="text-sm font-semibold text-blue-900">
+                      {t('traceability.regulatory_info')}
+                    </h4>
+                    
+                    <div>
+                      <label htmlFor="sanitaryRegistry" className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('traceability.sanitiary_registry')} (USA) *
+                      </label>
+                      <input
+                        id="sanitaryRegistry"
+                        type="text"
+                        value={formData.sanitaryRegistry}
+                        onChange={(e) => setFormData({ ...formData, sanitaryRegistry: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        placeholder="Ej: FDA-12345, USDA-VET-789"
+                        required={isVaccineOrFood}
+                      />
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="qualityCertificate" className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('traceability.quality_certificate')} *
+                      </label>
+                      <input
+                        id="qualityCertificate"
+                        type="text"
+                        value={formData.qualityCertificate}
+                        onChange={(e) => setFormData({ ...formData, qualityCertificate: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        placeholder="Ej: ISO-9001, GMP-2024"
+                        required={isVaccineOrFood}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <div className="grid grid-cols-2 gap-4">
                 <div>

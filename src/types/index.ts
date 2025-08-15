@@ -38,6 +38,13 @@ export interface TraceabilityRecord {
   unit: 'mg' | 'kg' | 'gr' | 'ml' | 'l' | 'cm';
   observations: string;
   status: 'initiated' | 'completed' | 'finished';
+  // Campos adicionales para vacunas y alimentos
+  expirationDate?: string;
+  manufacturingYear?: string;
+  qualityCertificate?: string;
+  sanitaryRegistry?: string;
+  manufacturer?: string;
+  batchNumber?: string;
 }
 
 export interface TraceabilitySummary {
