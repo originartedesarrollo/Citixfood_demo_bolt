@@ -17,7 +17,8 @@
     "quantity": "Cantidad",
     "price": "Precio",
     "view_detail": "Ver Detalle",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "select": "Seleccionar"
   },
   "auth": {
     "platform_title": "Plataforma de Productores",

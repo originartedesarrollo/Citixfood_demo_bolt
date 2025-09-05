@@ -23,12 +23,28 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
     unit: 'cm',
     observations: '',
     status: 'initiated',
+    // Campos para vacunas y alimentos
     expirationDate: '',
     manufacturingYear: '',
     qualityCertificate: '',
     sanitaryRegistry: '',
     manufacturer: '',
-    batchNumber: ''
+    batchNumber: '',
+    // Campos para agua
+    waterPh: 7.0,
+    waterType: 'potable',
+    waterSource: '',
+    chlorineLevel: 0,
+    hardness: 0,
+    temperature: 20,
+    // Campos para crecimiento
+    weight: 0,
+    age: 0,
+    feedConversion: 0,
+    mortality: 0,
+    healthStatus: 'good',
+    environmentalTemp: 25,
+    humidity: 60
   });
 
   const lot = lots.find(l => l.id === lotId);
@@ -49,12 +65,28 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
         unit: 'cm',
         observations: '',
         status: 'initiated',
+        // Campos para vacunas y alimentos
         expirationDate: '',
         manufacturingYear: new Date().getFullYear().toString(),
         qualityCertificate: '',
         sanitaryRegistry: '',
         manufacturer: '',
-        batchNumber: ''
+        batchNumber: '',
+        // Campos para agua
+        waterPh: 7.0,
+        waterType: 'potable',
+        waterSource: '',
+        chlorineLevel: 0,
+        hardness: 0,
+        temperature: 20,
+        // Campos para crecimiento
+        weight: 0,
+        age: 0,
+        feedConversion: 0,
+        mortality: 0,
+        healthStatus: 'good',
+        environmentalTemp: 25,
+        humidity: 60
       });
     }
     setIsModalOpen(true);
@@ -73,12 +105,28 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
       unit: formData.unit || 'cm',
       observations: formData.observations || '',
       status: formData.status || 'initiated',
+      // Campos para vacunas y alimentos
       expirationDate: formData.expirationDate,
       manufacturingYear: formData.manufacturingYear,
       qualityCertificate: formData.qualityCertificate,
       sanitaryRegistry: formData.sanitaryRegistry,
       manufacturer: formData.manufacturer,
-      batchNumber: formData.batchNumber
+      batchNumber: formData.batchNumber,
+      // Campos para agua
+      waterPh: formData.waterPh,
+      waterType: formData.waterType,
+      waterSource: formData.waterSource,
+      chlorineLevel: formData.chlorineLevel,
+      hardness: formData.hardness,
+      temperature: formData.temperature,
+      // Campos para crecimiento
+      weight: formData.weight,
+      age: formData.age,
+      feedConversion: formData.feedConversion,
+      mortality: formData.mortality,
+      healthStatus: formData.healthStatus,
+      environmentalTemp: formData.environmentalTemp,
+      humidity: formData.humidity
     };
 
     saveTraceabilityRecord(recordData);
@@ -541,6 +589,252 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                         placeholder="Ej: ISO-9001, GMP-2024"
                         required={isVaccineOrFood}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Campos adicionales para agua */}
+              {isWater && (
+                <div className="space-y-4 p-4 bg-cyan-50 rounded-lg">
+                  <h4 className="text-sm font-semibold text-cyan-900 mb-3">
+                    {t('traceability.water_details')}
+                  </h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="waterPh" className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('traceability.water_ph')} *
+                      </label>
+                      <input
+                        id="waterPh"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="14"
+                        value={formData.waterPh}
+                        onChange={(e) => setFormData({ ...formData, waterPh: parseFloat(e.target.value) })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        placeholder="6.5 - 8.5"
+                        required={isWater}
+                      />
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="waterType" className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('traceability.water_type')} *
+                      </label>
+                      <select
+                        id="waterType"
+                        value={formData.waterType}
+                        onChange={(e) => setFormData({ ...formData, waterType: e.target.value as any })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        required={isWater}
+                      >
+                        <option value="potable">{t('water_types.potable')}</option>
+                        <option value="well">{t('water_types.well')}</option>
+                        <option value="treated">{t('water_types.treated')}</option>
+                        <option value="spring">{t('water_types.spring')}</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="waterSource" className="block text-sm font-medium text-gray-700 mb-1">
+                      {t('traceability.water_source')} *
+                    </label>
+                    <input
+                      id="waterSource"
+                      type="text"
+                      value={formData.waterSource}
+                      onChange={(e) => setFormData({ ...formData, waterSource: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      placeholder="Ej: Pozo artesiano #3, Red municipal, etc."
+                      required={isWater}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label htmlFor="chlorineLevel" className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('traceability.chlorine_level')} *
+                      </label>
+                      <input
+                        id="chlorineLevel"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        value={formData.chlorineLevel}
+                        onChange={(e) => setFormData({ ...formData, chlorineLevel: parseFloat(e.target.value) })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        placeholder="0.2 - 2.0"
+                        required={isWater}
+                      />
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="hardness" className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('traceability.water_hardness')} *
+                      </label>
+                      <input
+                        id="hardness"
+                        type="number"
+                        min="0"
+                        value={formData.hardness}
+                        onChange={(e) => setFormData({ ...formData, hardness: parseFloat(e.target.value) })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        placeholder="50 - 300"
+                        required={isWater}
+                      />
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="temperature" className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('traceability.water_temperature')} *
+                      </label>
+                      <input
+                        id="temperature"
+                        type="number"
+                        step="0.1"
+                        value={formData.temperature}
+                        onChange={(e) => setFormData({ ...formData, temperature: parseFloat(e.target.value) })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        placeholder="18 - 25"
+                        required={isWater}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Campos adicionales para crecimiento */}
+              {isGrowth && (
+                <div className="space-y-4 p-4 bg-green-50 rounded-lg">
+                  <h4 className="text-sm font-semibold text-green-900 mb-3">
+                    {t('traceability.growth_details')}
+                  </h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label htmlFor="weight" className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('traceability.weight')} *
+                      </label>
+                      <input
+                        id="weight"
+                        type="number"
+                        min="0"
+                        value={formData.weight}
+                        onChange={(e) => setFormData({ ...formData, weight: parseFloat(e.target.value) })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        placeholder="1500 - 2500"
+                        required={isGrowth}
+                      />
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="age" className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('traceability.age')} *
+                      </label>
+                      <input
+                        id="age"
+                        type="number"
+                        min="0"
+                        value={formData.age}
+                        onChange={(e) => setFormData({ ...formData, age: parseFloat(e.target.value) })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        placeholder="1 - 45"
+                        required={isGrowth}
+                      />
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="feedConversion" className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('traceability.feed_conversion')} *
+                      </label>
+                      <input
+                        id="feedConversion"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        value={formData.feedConversion}
+                        onChange={(e) => setFormData({ ...formData, feedConversion: parseFloat(e.target.value) })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        placeholder="1.5 - 2.5"
+                        required={isGrowth}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="mortality" className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('traceability.mortality')} *
+                      </label>
+                      <input
+                        id="mortality"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="100"
+                        value={formData.mortality}
+                        onChange={(e) => setFormData({ ...formData, mortality: parseFloat(e.target.value) })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        placeholder="0 - 5"
+                        required={isGrowth}
+                      />
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="healthStatus" className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('traceability.health_status')} *
+                      </label>
+                      <select
+                        id="healthStatus"
+                        value={formData.healthStatus}
+                        onChange={(e) => setFormData({ ...formData, healthStatus: e.target.value as any })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        required={isGrowth}
+                      >
+                        <option value="excellent">{t('health_status.excellent')}</option>
+                        <option value="good">{t('health_status.good')}</option>
+                        <option value="regular">{t('health_status.regular')}</option>
+                        <option value="poor">{t('health_status.poor')}</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="environmentalTemp" className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('traceability.environmental_temp')} *
+                      </label>
+                      <input
+                        id="environmentalTemp"
+                        type="number"
+                        step="0.1"
+                        value={formData.environmentalTemp}
+                        onChange={(e) => setFormData({ ...formData, environmentalTemp: parseFloat(e.target.value) })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        placeholder="20 - 30"
+                        required={isGrowth}
+                      />
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="humidity" className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('traceability.humidity')} *
+                      </label>
+                      <input
+                        id="humidity"
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={formData.humidity}
+                        onChange={(e) => setFormData({ ...formData, humidity: parseFloat(e.target.value) })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        placeholder="50 - 70"
+                        required={isGrowth}
                       />
                     </div>
                   </div>
