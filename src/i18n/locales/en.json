@@ -108,6 +108,21 @@
     "batch_number": "Batch Number",
     "regulatory_info": "Regulatory Information",
     "product_details": "Product Details",
+    "water_details": "Water Details",
+    "water_ph": "Water pH",
+    "water_type": "Water Type",
+    "water_source": "Water Source",
+    "chlorine_level": "Chlorine Level (ppm)",
+    "water_hardness": "Water Hardness (ppm)",
+    "water_temperature": "Water Temperature (°C)",
+    "growth_details": "Growth Details",
+    "weight": "Average Weight (gr)",
+    "age": "Age (days)",
+    "feed_conversion": "Feed Conversion",
+    "mortality": "Mortality (%)",
+    "health_status": "Health Status",
+    "environmental_temp": "Environmental Temperature (°C)",
+    "humidity": "Humidity (%)",
     "types": {
       "growth": "Growth",
       "vaccine": "Vaccine",
@@ -122,6 +137,18 @@
       "l": "l",
       "cm": "cm"
     }
+  },
+  "water_types": {
+    "potable": "Potable",
+    "well": "Well",
+    "treated": "Treated",
+    "spring": "Spring"
+  },
+  "health_status": {
+    "excellent": "Excellent",
+    "good": "Good",
+    "regular": "Regular",
+    "poor": "Poor"
   },
   "financial": {
     "dashboard_title": "Financial Dashboard",

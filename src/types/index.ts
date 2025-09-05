@@ -45,6 +45,21 @@ export interface TraceabilityRecord {
   sanitaryRegistry?: string;
   manufacturer?: string;
   batchNumber?: string;
+  // Campos adicionales para agua
+  waterPh?: number;
+  waterType?: 'potable' | 'well' | 'treated' | 'spring';
+  waterSource?: string;
+  chlorineLevel?: number;
+  hardness?: number;
+  temperature?: number;
+  // Campos adicionales para crecimiento
+  weight?: number;
+  age?: number;
+  feedConversion?: number;
+  mortality?: number;
+  healthStatus?: 'excellent' | 'good' | 'regular' | 'poor';
+  environmentalTemp?: number;
+  humidity?: number;
 }
 
 export interface TraceabilitySummary {

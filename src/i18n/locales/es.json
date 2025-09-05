@@ -107,6 +107,21 @@
     "batch_number": "Número de Lote",
     "regulatory_info": "Información Regulatoria",
     "product_details": "Detalles del Producto",
+    "water_details": "Detalles del Agua",
+    "water_ph": "pH del Agua",
+    "water_type": "Tipo de Agua",
+    "water_source": "Fuente del Agua",
+    "chlorine_level": "Nivel de Cloro (ppm)",
+    "water_hardness": "Dureza del Agua (ppm)",
+    "water_temperature": "Temperatura del Agua (°C)",
+    "growth_details": "Detalles del Crecimiento",
+    "weight": "Peso Promedio (gr)",
+    "age": "Edad (días)",
+    "feed_conversion": "Conversión Alimenticia",
+    "mortality": "Mortalidad (%)",
+    "health_status": "Estado de Salud",
+    "environmental_temp": "Temperatura Ambiental (°C)",
+    "humidity": "Humedad (%)",
     "types": {
       "growth": "Crecimiento",
       "vaccine": "Vacuna",
@@ -121,6 +136,18 @@
       "l": "l",
       "cm": "cm"
     }
+  },
+  "water_types": {
+    "potable": "Potable",
+    "well": "Pozo",
+    "treated": "Tratada",
+    "spring": "Manantial"
+  },
+  "health_status": {
+    "excellent": "Excelente",
+    "good": "Bueno",
+    "regular": "Regular",
+    "poor": "Deficiente"
   },
   "financial": {
     "dashboard_title": "Dashboard Financiero",

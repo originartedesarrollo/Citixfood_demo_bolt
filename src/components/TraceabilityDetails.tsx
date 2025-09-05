@@ -136,6 +136,8 @@ const TraceabilityDetails: React.FC<TraceabilityDetailsProps> = ({ lotId, userId
   };
 
   const isVaccineOrFood = formData.type === 'vaccine' || formData.type === 'food';
+  const isWater = formData.type === 'water';
+  const isGrowth = formData.type === 'growth';
 
   // Preparar datos para la gráfica de crecimiento
   const formatDate = (dateString: string) => {
